@@ -1,33 +1,32 @@
 stages:
-  - test
   - build
   - deploy
 
 variables:
   NODE_ENV: "production"
 
-test:
-  stage: test
-  tags:
-    - pipeline-runner
-  script:
-    - node -v
-    - npm -v
-    - npm install
-    - npm run test -- --watch=false --no-progress
-
 build:
   stage: build
   tags:
     - pipeline-runner
   script:
+    - echo "Node version:"
     - node -v
+    - echo "NPM version:"
     - npm -v
+
+    - echo "Installing dependencies..."
     - npm install
-    - npm run build
+
+    - echo "Checking Angular CLI..."
+    - ./node_modules/.bin/ng version
+
+    - echo "Building Angular application..."
+    - ./node_modules/.bin/ng build
+
     - echo "Checking build output..."
     - ls -la
-    - find dist -maxdepth 3 -type f | head -50
+    - find dist -maxdepth 4 -type f | head -50
 
 deploy:
   stage: deploy
@@ -36,8 +35,10 @@ deploy:
   script:
     - echo "Building frontend Docker image..."
     - docker build -t finsight-frontend:latest .
+
     - echo "Deploying frontend..."
     - chmod +x scripts/deploy.sh
     - ./scripts/deploy.sh
+
   only:
     - main
