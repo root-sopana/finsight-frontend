@@ -9,6 +9,7 @@ build:
   script:
     - npm install
     - ng build
+    - find dist -maxdepth 4 -type f
   artifacts:
     paths:
       - dist/
@@ -22,5 +23,6 @@ deploy:
     - docker stop finsight-frontend || true
     - docker rm finsight-frontend || true
     - docker run -d --name finsight-frontend -p 80:80 finsight-frontend
+    - docker exec finsight-frontend ls -la /usr/share/nginx/html
   only:
     - main
