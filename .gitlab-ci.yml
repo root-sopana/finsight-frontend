@@ -1,0 +1,43 @@
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  NODE_ENV: "production"
+
+test:
+  stage: test
+  tags:
+    - pipeline-runner
+  script:
+    - node -v
+    - npm -v
+    - npm ci
+    - npm run test -- --watch=false --no-progress
+
+build:
+  stage: build
+  tags:
+    - pipeline-runner
+  script:
+    - node -v
+    - npm -v
+    - npm ci
+    - npm run build
+    - echo "Checking build output..."
+    - ls -la
+    - find dist -maxdepth 3 -type f | head -50
+
+deploy:
+  stage: deploy
+  tags:
+    - pipeline-runner
+  script:
+    - echo "Building frontend Docker image..."
+    - docker build -t finsight-frontend:latest .
+    - echo "Deploying frontend..."
+    - chmod +x scripts/deploy.sh
+    - ./scripts/deploy.sh
+  only:
+    - main
