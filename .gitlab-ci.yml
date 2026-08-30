@@ -5,7 +5,7 @@ stages:
 build:
   stage: build
   tags:
-    - pipeline-runner
+    - gitlab-runner
 
   script:
     - node -v
@@ -24,7 +24,7 @@ build:
 deploy:
   stage: deploy
   tags:
-    - pipeline-runner
+    - gitlab-runner
 
   script:
     - echo "Checking dist..."
