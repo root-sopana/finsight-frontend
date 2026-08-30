@@ -6,37 +6,21 @@ build:
   stage: build
   tags:
     - gitlab-runner
-
   script:
-    - node -v
-    - npm -v
-    - npm install --include=dev
-    - ng version
+    - npm install
     - ng build
-    - ls -la
-    - find dist -maxdepth 4 -type f | head -50
-
   artifacts:
     paths:
       - dist/
-    expire_in: 1 hour
 
 deploy:
   stage: deploy
   tags:
     - gitlab-runner
-
   script:
-    - echo "Checking dist..."
-    - ls -la
-    - ls -la dist
-    - echo "Checking nginx.conf..."
-    - ls -la nginx.conf
-
-    - docker build -t finsight-frontend:latest .
-
-    - chmod +x scripts/deploy.sh
-    - ./scripts/deploy.sh
-
+    - docker build -t finsight-frontend .
+    - docker stop finsight-frontend || true
+    - docker rm finsight-frontend || true
+    - docker run -d --name finsight-frontend -p 80:80 finsight-frontend
   only:
     - main
