@@ -26,3 +26,4 @@ deploy:
     - docker exec finsight-frontend ls -la /usr/share/nginx/html
   only:
     - main
+
