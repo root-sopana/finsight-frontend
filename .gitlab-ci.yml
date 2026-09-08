@@ -8,7 +8,7 @@ build:
     - Finsight-runner
   script:
     - npm install
-    - npx ng build
+    - ng build
     - find dist -maxdepth 4 -type f
   artifacts:
     paths:
