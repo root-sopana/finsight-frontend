@@ -5,7 +5,7 @@ stages:
 build:
   stage: build
   tags:
-    - Finsight-runner
+    - pipeline-runner
   script:
     - npm install
     - ng build
@@ -17,7 +17,7 @@ build:
 deploy:
   stage: deploy
   tags:
-    - Finsight-runner
+    - pipeline-runner
   script:
     - docker build -t finsight-frontend .
     - docker stop finsight-frontend || true
